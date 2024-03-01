@@ -4,6 +4,8 @@ import { mutation, query } from "./_generated/server";
 export const createProject = mutation({
   args: {
     title: v.string(),
+    authorId: v.string(),
+    workspace: v.id("workspaces"),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -16,7 +18,8 @@ export const createProject = mutation({
 
     const document = await ctx.db.insert("projects", {
       title: args.title,
-      userId,
+      authorId: args.authorId,
+      workspace: args.workspace,
     });
 
     return document;
