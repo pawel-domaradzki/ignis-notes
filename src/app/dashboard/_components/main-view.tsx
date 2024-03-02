@@ -9,11 +9,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@clerk/nextjs";
-import { useConvexAuth } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { WorkspaceSwitcher } from "./workspace-switcher";
 import { WorkspaceCreator } from "./workspace-creator";
+import { api } from "../../../../convex/_generated/api";
 
 interface MainViewProps {
   workspaces?: {
@@ -25,10 +26,12 @@ interface MainViewProps {
 
 export function MainView({
   defaultLayout = [15, 85],
-  workspaces,
+ 
 }: MainViewProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { isAuthenticated, isLoading } = useConvexAuth();
+
+
+  const workspaces = useQuery(api.workspaces.listWorkspaces) || [];
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -53,7 +56,7 @@ export function MainView({
             isCollapsed ? "h-[52px]" : "px-2"
           )}
         >
-          {workspaces ? (
+          {workspaces.length ? (
             <WorkspaceSwitcher
               isCollapsed={isCollapsed}
               workspaces={workspaces}
@@ -70,14 +73,14 @@ export function MainView({
               isCollapsed ? "h-[52px]" : "px-2"
             )}
           ></div>
-          {isAuthenticated && !isLoading && (
+        
             <>
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/dashboard">Dashboard</Link>
               </Button>
               <UserButton afterSignOutUrl="/" />
             </>
-          )}
+        
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />

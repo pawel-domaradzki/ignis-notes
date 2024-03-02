@@ -35,9 +35,13 @@ export function CreateWorkspaceForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createWorkspace({
-      title: values.workspaceTitle,
-    });
+    try {
+      await createWorkspace({
+        title: values.workspaceTitle,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <Form {...form}>

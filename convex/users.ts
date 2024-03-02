@@ -14,6 +14,8 @@ export const store = mutation({
         q.eq("tokenIdentifier", identity.tokenIdentifier)
       )
       .unique();
+
+      
     if (user !== null) {
       if (user.name !== identity.name) {
         await ctx.db.patch(user._id, { name: identity.name });
